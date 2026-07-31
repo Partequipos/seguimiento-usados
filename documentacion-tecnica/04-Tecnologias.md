@@ -100,15 +100,6 @@
 
 **¿Para qué se usa?** Para que los estilos funcionen en todos los navegadores.
 
-## Dependencias Opcionales
-
-### @supabase/supabase-js
-**¿Qué es?** Cliente para Supabase (base de datos en la nube).
-
-**¿Para qué se usa?** Actualmente no se usa en este proyecto, pero está instalado por si se necesita en el futuro.
-
-**Versión:** 2.57.4
-
 ## Resumen de Versiones
 
 | Tecnología | Versión | Tipo |
