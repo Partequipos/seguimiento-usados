@@ -66,7 +66,7 @@ const SharePointDataTableSimple: React.FC<SharePointDataTableSimpleProps> = ({
 
   const getEstadoBadge = (estado: string) => {
     const badges: Record<string, string> = {
-      "En Proceso": "bg-blue-100 text-blue-800",
+      "En Proceso": "bg-brand-red-soft text-brand-red-dark",
       Completado: "bg-green-100 text-green-800",
       Pendiente: "bg-yellow-100 text-yellow-800",
     };
@@ -85,12 +85,12 @@ const SharePointDataTableSimple: React.FC<SharePointDataTableSimpleProps> = ({
   return (
     <div className="space-y-4">
       {useMockData && (
-        <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+        <div className="bg-brand-gray-soft border-l-4 border-brand-gray p-4 rounded-r-lg">
           <div className="flex items-center gap-2">
-            <TestTube2 className="w-5 h-5 text-purple-600" />
-            <p className="text-purple-800 font-medium">Modo de Prueba Activo</p>
+            <TestTube2 className="w-5 h-5 text-brand-gray" />
+            <p className="text-brand-ink font-medium">Modo de Prueba Activo</p>
           </div>
-          <p className="text-purple-700 text-sm mt-1">
+          <p className="text-brand-gray text-sm mt-1">
             Puedes agregar, editar y eliminar registros. Los cambios se
             aplicarán localmente. Una vez que el administrador apruebe los
             permisos, los cambios se guardarán en SharePoint.
@@ -144,7 +144,7 @@ const SharePointDataTableSimple: React.FC<SharePointDataTableSimpleProps> = ({
                         <div className="flex items-center gap-2">
                           <div className="w-full bg-gray-200 rounded-full h-2.5">
                             <div
-                              className="bg-blue-600 h-2.5 rounded-full"
+                              className="bg-brand-red h-2.5 rounded-full"
                               style={{
                                 width: `${item.fields[column.name]}%`,
                               }}
@@ -169,7 +169,7 @@ const SharePointDataTableSimple: React.FC<SharePointDataTableSimpleProps> = ({
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
                       onClick={() => onEdit(item)}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
+                      className="text-brand-red hover:text-brand-red-dark mr-4"
                       title="Editar"
                     >
                       <Edit2 className="w-5 h-5" />

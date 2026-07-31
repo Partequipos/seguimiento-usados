@@ -49,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
 
   // Datos para gráfico de estados
   const estadosData = [
-    { name: "En Proceso", value: stats.enProceso, color: "#3b82f6" },
+    { name: "En Proceso", value: stats.enProceso, color: "#cf1b22" },
     { name: "Completado", value: stats.completados, color: "#10b981" },
     { name: "Pendiente", value: stats.pendientes, color: "#f59e0b" },
   ];
@@ -119,8 +119,8 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
                 {stats.total}
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <Car className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <Car className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
@@ -129,12 +129,12 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">En Proceso</p>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-3xl font-bold text-brand-red mt-2">
                 {stats.enProceso}
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <Clock className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <Clock className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
@@ -187,12 +187,12 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
               <p className="text-sm font-medium text-gray-600">
                 Avance Promedio
               </p>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-3xl font-bold text-brand-red mt-2">
                 {stats.promedioAvance.toFixed(0)}%
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <TrendingUp className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
               <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="cantidad" fill="#3b82f6" />
+              <Bar dataKey="cantidad" fill="#cf1b22" />
             </BarChart>
           </ResponsiveContainer>
         </div>

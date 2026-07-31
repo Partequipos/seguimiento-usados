@@ -158,12 +158,12 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
   return (
     <div className="w-full space-y-4">
       {useMockData && (
-        <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg w-full">
+        <div className="bg-brand-gray-soft border-l-4 border-brand-gray p-4 rounded-r-lg w-full">
           <div className="flex items-center gap-2">
-            <TestTube2 className="w-5 h-5 text-purple-600" />
-            <p className="text-purple-800 font-medium">Modo de Prueba Activo</p>
+            <TestTube2 className="w-5 h-5 text-brand-gray" />
+            <p className="text-brand-ink font-medium">Modo de Prueba Activo</p>
           </div>
-          <p className="text-purple-700 text-sm mt-1">
+          <p className="text-brand-gray text-sm mt-1">
             Puedes agregar, editar y eliminar registros. Los cambios se
             aplicarán localmente. Una vez que el administrador apruebe los
             permisos, los cambios se guardarán en SharePoint.
@@ -171,13 +171,13 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden w-full">
+      <div className="panel-brand overflow-hidden w-full">
         <div className="overflow-x-auto w-full">
           <table
             className="w-full divide-y divide-gray-200"
             style={{ minWidth: "100%" }}
           >
-            <thead className="bg-gray-50">
+            <thead className="bg-brand-gray-soft">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Título
@@ -193,7 +193,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                           value={serieFilter}
                           onChange={(e) => setSerieFilter(e.target.value)}
                           placeholder="Buscar serie..."
-                          className="w-full pl-7 pr-6 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                          className="w-full pl-7 pr-6 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-brand-red/40 focus:border-brand-red bg-white"
                           onClick={(e) => e.stopPropagation()}
                         />
                         {serieFilter && (
@@ -222,7 +222,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                                   e.stopPropagation();
                                   setSerieFilter(serie);
                                 }}
-                                className="w-full text-left px-2 py-1 text-xs hover:bg-blue-50 text-gray-700"
+                                className="w-full text-left px-2 py-1 text-xs hover:bg-brand-red-soft text-gray-700"
                               >
                                 {serie}
                               </button>
@@ -305,7 +305,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                             <>
                               <div className="w-24 bg-gray-200 rounded-full h-2">
                                 <div
-                                  className="bg-blue-600 h-2 rounded-full"
+                                  className="bg-brand-red h-2 rounded-full"
                                   style={{
                                     width: `${porcentaje}%`,
                                   }}
@@ -352,7 +352,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                       </button>
                       <button
                         onClick={() => onEdit(item)}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        className="text-brand-red hover:text-brand-red-dark mr-3"
                         title="Editar"
                       >
                         <Edit2 className="w-5 h-5" />
@@ -450,13 +450,13 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                                           href={fileUrl}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors group"
+                                          className="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 hover:border-brand-red-muted hover:bg-brand-red-soft transition-colors group"
                                         >
-                                          <FileIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                          <FileIcon className="w-4 h-4 text-brand-red flex-shrink-0" />
                                           <span className="text-xs text-gray-900 truncate flex-1">
                                             {file.FileName || file.name}
                                           </span>
-                                          <Download className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-600 flex-shrink-0" />
+                                          <Download className="w-3.5 h-3.5 text-gray-400 group-hover:text-brand-red flex-shrink-0" />
                                         </a>
                                       );
                                     }

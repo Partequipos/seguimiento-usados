@@ -110,8 +110,8 @@ const SharePointDataTable: React.FC = () => {
 
   if (!isAuthenticated && !useMockData && items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-blue-50 rounded-lg">
-        <AlertCircle className="w-12 h-12 text-blue-500 mb-4" />
+      <div className="flex flex-col items-center justify-center p-8 bg-brand-red-soft rounded-lg">
+        <AlertCircle className="w-12 h-12 text-brand-red mb-4" />
         <p className="text-lg text-gray-700 mb-4">
           Por favor inicia sesión para ver los datos de SharePoint
         </p>
@@ -121,7 +121,7 @@ const SharePointDataTable: React.FC = () => {
         </p>
         <button
           onClick={loadMockData}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-gray hover:bg-brand-ink text-white rounded-lg transition-colors"
         >
           <TestTube2 className="w-4 h-4" />
           Ver Datos de Prueba
@@ -133,7 +133,7 @@ const SharePointDataTable: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-12">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+        <Loader2 className="w-12 h-12 text-brand-red animate-spin mb-4" />
         <p className="text-gray-600">Cargando datos de SharePoint...</p>
       </div>
     );
@@ -159,7 +159,7 @@ const SharePointDataTable: React.FC = () => {
               </button>
               <button
                 onClick={loadMockData}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-brand-gray hover:bg-brand-ink text-white rounded-lg transition-colors"
               >
                 <TestTube2 className="w-4 h-4" />
                 Usar Datos de Prueba
@@ -180,7 +180,7 @@ const SharePointDataTable: React.FC = () => {
         </p>
         <button
           onClick={loadData}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-red hover:bg-brand-red-dark text-white rounded-lg transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           Recargar
@@ -192,12 +192,12 @@ const SharePointDataTable: React.FC = () => {
   return (
     <div className="space-y-4">
       {useMockData && (
-        <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
+        <div className="bg-brand-gray-soft border-l-4 border-brand-gray p-4 rounded-r-lg">
           <div className="flex items-center gap-2">
-            <TestTube2 className="w-5 h-5 text-purple-600" />
-            <p className="text-purple-800 font-medium">Modo de Prueba Activo</p>
+            <TestTube2 className="w-5 h-5 text-brand-gray" />
+            <p className="text-brand-ink font-medium">Modo de Prueba Activo</p>
           </div>
-          <p className="text-purple-700 text-sm mt-1">
+          <p className="text-brand-gray text-sm mt-1">
             Estás viendo datos de ejemplo. Una vez que el administrador apruebe
             los permisos, podrás ver los datos reales de SharePoint.
           </p>
@@ -230,7 +230,7 @@ const SharePointDataTable: React.FC = () => {
           <button
             onClick={useMockData ? loadMockData : loadData}
             disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-red hover:bg-brand-red-dark disabled:bg-gray-400 text-white rounded-lg transition-colors"
           >
             <RefreshCw
               className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`}

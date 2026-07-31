@@ -540,29 +540,33 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-brand-mesh">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="relative bg-brand-white/95 backdrop-blur-sm shadow-panel border-b border-brand-gray-border/50">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-red via-brand-red to-brand-gray" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex-1 flex justify-start">
               <a
                 href="https://calendarioservicios.vercel.app/login"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border border-gray-200"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-brand-gray bg-brand-gray-soft hover:bg-brand-red-soft hover:text-brand-red rounded-lg transition-all border border-brand-gray-border/80"
               >
-                <Calendar className="w-5 h-5 text-blue-600" />
+                <Calendar className="w-5 h-5 text-brand-red" />
                 Calendario Servicio
               </a>
             </div>
             {/* Logo centrado */}
-            <div className="flex-1 flex justify-center">
+            <div className="flex-1 flex flex-col items-center justify-center">
               <img
                 src="https://res.cloudinary.com/dbufrzoda/image/upload/v1750457354/Captura_de_pantalla_2025-06-20_170819_wzmyli.png"
                 alt="Logo Partequipos"
                 className="h-16 object-contain"
               />
+              <p className="mt-1 text-[11px] font-semibold tracking-[0.18em] uppercase text-brand-gray-light">
+                Seguimiento Usados
+              </p>
             </div>
             {/* Botón de login alineado a la derecha */}
             <div className="flex-1 flex justify-end">
@@ -573,16 +577,16 @@ function AppContent() {
       </header>
 
       {/* Navigation */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-brand-white border-b border-brand-gray-border/70 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <div className="flex space-x-4">
+            <div className="flex space-x-1 sm:space-x-2">
               <button
                 onClick={() => setCurrentView("dashboard")}
-                className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
+                className={`px-4 py-3 flex items-center gap-2 border-b-[3px] transition-colors ${
                   currentView === "dashboard"
-                    ? "border-blue-600 text-blue-600 font-medium"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    ? "border-brand-red text-brand-red font-semibold"
+                    : "border-transparent text-brand-gray-light hover:text-brand-gray"
                 }`}
               >
                 <LayoutDashboard className="w-5 h-5" />
@@ -590,10 +594,10 @@ function AppContent() {
               </button>
               <button
                 onClick={() => setCurrentView("table")}
-                className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
+                className={`px-4 py-3 flex items-center gap-2 border-b-[3px] transition-colors ${
                   currentView === "table"
-                    ? "border-blue-600 text-blue-600 font-medium"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    ? "border-brand-red text-brand-red font-semibold"
+                    : "border-transparent text-brand-gray-light hover:text-brand-gray"
                 }`}
               >
                 <Table2 className="w-5 h-5" />
@@ -602,7 +606,7 @@ function AppContent() {
             </div>
             <button
               onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="btn-brand"
             >
               <Plus className="w-5 h-5" />
               Agregar Equipo
@@ -612,11 +616,11 @@ function AppContent() {
       </div>
 
       {/* Main Content */}
-      <main className="w-full px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full flex-1 px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-12">
-            <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-            <p className="text-gray-600">Cargando datos...</p>
+            <Loader2 className="w-12 h-12 text-brand-red animate-spin mb-4" />
+            <p className="text-brand-gray font-medium">Cargando datos...</p>
           </div>
         ) : (
           <>
@@ -645,11 +649,11 @@ function AppContent() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
+      <footer className="bg-brand-gray text-brand-white mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-gray-500">
-            © 2025 Seguimiento Usados - Desarrollado con React + Vite +
-            TypeScript
+          <p className="text-center text-sm text-white/80">
+            © {new Date().getFullYear()} Partequipos — Seguimiento Alistamiento
+            Usados
           </p>
         </div>
       </footer>

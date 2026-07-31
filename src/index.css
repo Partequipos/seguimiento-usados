@@ -2,40 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos personalizados para scrollbars en secciones de registros */
+:root {
+  --brand-red: #cf1b22;
+  --brand-red-dark: #a5151b;
+  --brand-gray: #50504f;
+  --brand-white: #ffffff;
+  --brand-ink: #020202;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-brand-mesh text-brand-gray font-sans min-h-screen;
+    color: var(--brand-gray);
+  }
+}
+
+@layer components {
+  .panel-brand {
+    @apply bg-brand-white rounded-xl shadow-panel border border-brand-gray-border/60;
+  }
+
+  .btn-brand {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-brand-red text-brand-white rounded-lg
+      hover:bg-brand-red-dark transition-colors shadow-brand font-medium;
+  }
+
+  .btn-brand-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-brand-gray text-brand-white rounded-lg
+      hover:bg-brand-ink transition-colors font-medium;
+  }
+
+  .input-brand {
+    @apply w-full px-3 py-2 border border-brand-gray-border rounded-lg text-sm
+      focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red outline-none transition-shadow;
+  }
+}
+
+/* Scrollbars con identidad Partequipos */
 .registros-scroll::-webkit-scrollbar {
   width: 8px;
 }
 
 .registros-scroll::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: #f4f4f3;
   border-radius: 4px;
 }
 
 .registros-scroll::-webkit-scrollbar-thumb {
-  background: #3b82f6;
+  background: #cf1b22;
   border-radius: 4px;
 }
 
 .registros-scroll::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: #a5151b;
 }
 
-/* Scrollbar verde para sección de editados */
 .registros-scroll-green::-webkit-scrollbar {
   width: 8px;
 }
 
 .registros-scroll-green::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: #f4f4f3;
   border-radius: 4px;
 }
 
 .registros-scroll-green::-webkit-scrollbar-thumb {
-  background: #10b981;
+  background: #50504f;
   border-radius: 4px;
 }
 
 .registros-scroll-green::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: #020202;
 }
