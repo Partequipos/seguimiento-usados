@@ -106,7 +106,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <input
                 {...register("Title", { required: "La placa es obligatoria" })}
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="ABC123"
               />
               {errors.Title && (
@@ -124,7 +124,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <input
                 {...register("Marca", { required: "La marca es obligatoria" })}
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="Toyota"
               />
               {errors.Marca && (
@@ -144,7 +144,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   required: "El modelo es obligatorio",
                 })}
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="Hilux"
               />
               {errors.Modelo && (
@@ -166,7 +166,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   max: { value: 2030, message: "Año máximo: 2030" },
                 })}
                 type="number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="2020"
               />
               {errors.Año && (
@@ -185,7 +185,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 {...register("TipoVehiculo", {
                   required: "El tipo es obligatorio",
                 })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
               >
                 <option value="Automóvil">Automóvil</option>
                 <option value="Camioneta">Camioneta</option>
@@ -204,7 +204,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 {...register("Estado", {
                   required: "El estado es obligatorio",
                 })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
               >
                 <option value="Pendiente">Pendiente</option>
                 <option value="En Proceso">En Proceso</option>
@@ -226,7 +226,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   },
                 })}
                 type="number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="50000"
               />
               {errors.Kilometraje && (
@@ -247,7 +247,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   min: { value: 0, message: "El precio debe ser positivo" },
                 })}
                 type="number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="50000000"
               />
               {errors.PrecioVenta && (
@@ -267,7 +267,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   required: "La fecha es obligatoria",
                 })}
                 type="date"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
               />
               {errors.FechaIngreso && (
                 <p className="mt-1 text-sm text-red-600">
@@ -286,7 +286,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   required: "La fecha es obligatoria",
                 })}
                 type="date"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
               />
               {errors.FechaEstimadaEntrega && (
                 <p className="mt-1 text-sm text-red-600">
@@ -305,7 +305,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   required: "El responsable es obligatorio",
                 })}
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="Juan Pérez"
               />
               {errors.Responsable && (
@@ -324,7 +324,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 {...register("Prioridad", {
                   required: "La prioridad es obligatoria",
                 })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
               >
                 <option value="Baja">Baja</option>
                 <option value="Media">Media</option>
@@ -344,7 +344,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   max: { value: 100, message: "Máximo 100%" },
                 })}
                 type="number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                 placeholder="0"
               />
               {errors.PorcentajeAvance && (
@@ -362,7 +362,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <textarea
                 {...register("Observaciones")}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent resize-none"
                 placeholder="Observaciones adicionales sobre el equipo..."
               />
             </div>
@@ -381,7 +381,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-brand-red text-white rounded-lg hover:bg-brand-red-dark transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>

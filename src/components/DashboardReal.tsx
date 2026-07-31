@@ -88,7 +88,7 @@ const TopScrollBar: React.FC = () => {
       style={{
         height: "20px",
         scrollbarWidth: "thin",
-        scrollbarColor: "#cbd5e0 #f7fafc",
+        scrollbarColor: "#50504f #f4f4f3",
       }}
     >
       <div style={{ height: "1px" }}></div>
@@ -152,7 +152,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
   // Datos para gráfico de avance
   const avanceData = [
     { name: "Completados", value: completados, color: "#10b981" },
-    { name: "En Proceso", value: enProceso, color: "#3b82f6" },
+    { name: "En Proceso", value: enProceso, color: "#cf1b22" },
     { name: "Pendientes", value: pendientes, color: "#f59e0b" },
   ];
 
@@ -209,17 +209,17 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
       value,
       color:
         [
-          "#3b82f6",
+          "#cf1b22",
+          "#50504f",
           "#10b981",
           "#f59e0b",
-          "#ef4444",
-          "#8b5cf6",
-          "#06b6d4",
+          "#a5151b",
+          "#6e6e6d",
           "#84cc16",
-          "#ec4899",
-          "#6366f1",
+          "#020202",
+          "#d8d8d7",
           "#14b8a6",
-        ][idx % 10] ?? "#6b7280",
+        ][idx % 10] ?? "#50504f",
     })
   );
 
@@ -227,35 +227,35 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
     <div className="w-full space-y-6">
       {/* Tarjetas de estadísticas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 w-full">
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6 border-t-2 border-t-brand-red">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Equipos</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">
+              <p className="text-sm font-medium text-brand-gray">Total Equipos</p>
+              <p className="text-3xl font-bold text-brand-ink mt-2">
                 {stats.total}
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <Car className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <Car className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6 border-t-2 border-t-brand-red">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">En Proceso</p>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-sm font-medium text-brand-gray">En Proceso</p>
+              <p className="text-3xl font-bold text-brand-red mt-2">
                 {stats.enProceso}
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <Clock className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <Clock className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Completados</p>
@@ -269,7 +269,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Pendientes</p>
@@ -283,23 +283,23 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
                 Avance Promedio
               </p>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-3xl font-bold text-brand-red mt-2">
                 {stats.promedioAvance.toFixed(0)}%
               </p>
             </div>
-            <div className="bg-blue-100 rounded-full p-3">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
+            <div className="bg-brand-red-soft rounded-full p-3">
+              <TrendingUp className="w-6 h-6 text-brand-red" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -319,7 +319,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
         {/* Gráfico de Avance */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Distribución por Estado de Avance
           </h3>
@@ -353,7 +353,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
         </div>
 
         {/* Gráfico de Asesores */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Equipos por Asesor
           </h3>
@@ -363,13 +363,13 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
               <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="cantidad" fill="#3b82f6" />
+              <Bar dataKey="cantidad" fill="#cf1b22" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Gráfico de Sedes */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Distribución por Sede
           </h3>
@@ -392,7 +392,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
         </div>
 
         {/* Distribución por Modelo (todos los modelos y total) */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="panel-brand p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-1">
             Distribución por Modelo
           </h3>
@@ -426,7 +426,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
         {/* Tabla de progreso por equipo y Últimos Registros - Dos columnas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 col-span-1 lg:col-span-2">
           {/* Tabla de progreso por equipo */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="panel-brand p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Progreso por Equipo
             </h3>
@@ -437,7 +437,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
               {sortedItems.slice(0, 20).map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors"
+                  className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-brand-red-muted transition-colors"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1 min-w-0">
@@ -449,13 +449,13 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                         {fieldStr(item.fields, "Serie")}
                       </p>
                     </div>
-                    <span className="ml-3 text-lg font-bold text-blue-600">
+                    <span className="ml-3 text-lg font-bold text-brand-red">
                       {getPorcentajeAvance(item.fields)}%
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-300 shadow-sm"
+                      className="bg-gradient-to-r from-brand-red-soft0 to-brand-red-dark h-2.5 rounded-full transition-all duration-300 shadow-sm"
                       style={{
                         width: `${getPorcentajeAvance(item.fields)}%`,
                       }}
@@ -468,17 +468,17 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
 
           {/* Últimos Registros Creados y Editados */}
           <div
-            className="bg-white rounded-lg shadow p-6 flex flex-col"
+            className="panel-brand p-6 flex flex-col"
             style={{ height: "600px" }}
           >
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-blue-600" />
+              <Clock className="w-5 h-5 text-brand-red" />
               Últimos Registros Creados y Editados
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-hidden">
               {/* Últimos Creados */}
-              <div className="border border-blue-200 rounded-lg p-4 bg-gradient-to-br from-blue-50 to-white flex flex-col">
-                <h4 className="text-sm font-bold text-blue-700 mb-3 flex items-center gap-2 border-b border-blue-200 pb-2">
+              <div className="border border-brand-red-muted rounded-lg p-4 bg-gradient-to-br from-brand-red-soft to-white flex flex-col">
+                <h4 className="text-sm font-bold text-brand-red-dark mb-3 flex items-center gap-2 border-b border-brand-red-muted pb-2">
                   <TrendingUp className="w-4 h-4" />
                   Recientemente Creados
                 </h4>
@@ -486,7 +486,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                   className="space-y-2 flex-1 overflow-y-auto pr-1 registros-scroll"
                   style={{
                     scrollbarWidth: "thin",
-                    scrollbarColor: "#3b82f6 #e5e7eb",
+                    scrollbarColor: "#cf1b22 #e5e7eb",
                     maxHeight: "100%",
                     overflowY: "scroll" /* Forzar scrollbar siempre visible */,
                   }}
@@ -515,7 +515,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                       return (
                         <div
                           key={`created-${item.id}`}
-                          className="p-3 bg-white rounded-lg border border-blue-300 hover:shadow-md transition-shadow duration-200"
+                          className="p-3 bg-white rounded-lg border border-brand-red-muted hover:shadow-md transition-shadow duration-200"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex-1 min-w-0">
@@ -530,7 +530,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                               </p>
                             </div>
                             <div className="ml-3 text-right">
-                              <p className="text-xs font-medium text-blue-700 whitespace-nowrap">
+                              <p className="text-xs font-medium text-brand-red-dark whitespace-nowrap">
                                 {createdDate}
                               </p>
                             </div>
@@ -557,7 +557,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                   className="space-y-2 flex-1 overflow-y-auto pr-1 registros-scroll-green"
                   style={{
                     scrollbarWidth: "thin",
-                    scrollbarColor: "#10b981 #e5e7eb",
+                    scrollbarColor: "#50504f #f4f4f3",
                     maxHeight: "100%",
                     overflowY: "scroll" /* Forzar scrollbar siempre visible */,
                   }}
@@ -626,7 +626,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
       </div>
 
       {/* Resumen de Fases */}
-      <div className="bg-white rounded-lg shadow p-6 w-full">
+      <div className="panel-brand p-6 w-full">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Resumen de Fases (F1-F16)
         </h3>
@@ -653,7 +653,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
       </div>
 
       {/* Urgentes (Próximos a Vencer) - Ancho completo */}
-      <div className="bg-white rounded-lg shadow p-6 w-full">
+      <div className="panel-brand p-6 w-full">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Equipos Próximos a Vencer (Días Restantes)
         </h3>
@@ -716,7 +716,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
       </div>
 
       {/* Tabla Detallada con Fases */}
-      <div className="bg-white rounded-lg shadow overflow-hidden w-full">
+      <div className="panel-brand overflow-hidden w-full">
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">
             Tabla Detallada - Progreso de Fases por Equipo
@@ -736,7 +736,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
           style={{
             maxHeight: "600px",
             scrollbarWidth: "thin",
-            scrollbarColor: "#cbd5e0 #f7fafc",
+            scrollbarColor: "#50504f #f4f4f3",
           }}
         >
           <table
@@ -746,31 +746,31 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
             <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
                 <th
-                  className="px-4 py-3 sticky bg-blue-100 text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-blue-300"
+                  className="px-4 py-3 sticky bg-brand-gray-soft text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-brand-red-muted"
                   style={{ left: "0px", width: "110px" }}
                 >
                   Prioridad
                 </th>
                 <th
-                  className="px-4 py-3 sticky bg-blue-100 text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-blue-300"
+                  className="px-4 py-3 sticky bg-brand-gray-soft text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-brand-red-muted"
                   style={{ left: "110px", width: "130px" }}
                 >
                   Serie
                 </th>
                 <th
-                  className="px-4 py-3 sticky bg-blue-100 text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-blue-300"
+                  className="px-4 py-3 sticky bg-brand-gray-soft text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-brand-red-muted"
                   style={{ left: "240px", width: "130px" }}
                 >
                   OTT
                 </th>
                 <th
-                  className="px-4 py-3 sticky bg-blue-100 text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-blue-300"
+                  className="px-4 py-3 sticky bg-brand-gray-soft text-left text-xs font-medium text-gray-700 uppercase z-20 border-r border-brand-red-muted"
                   style={{ left: "370px", width: "130px" }}
                 >
                   Modelo
                 </th>
                 <th
-                  className="px-4 py-3 sticky bg-blue-100 text-left text-xs font-medium text-gray-700 uppercase z-20 border-r-4 border-blue-400 shadow-lg"
+                  className="px-4 py-3 sticky bg-brand-gray-soft text-left text-xs font-medium text-gray-700 uppercase z-20 border-r-4 border-brand-red shadow-lg"
                   style={{ left: "500px", width: "150px" }}
                 >
                   Asesor
@@ -824,7 +824,7 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                 return (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td
-                      className="px-4 py-3 sticky bg-blue-50 z-10 border-r border-blue-300"
+                      className="px-4 py-3 sticky bg-brand-gray-soft z-10 border-r border-brand-red-muted"
                       style={{ left: "0px", width: "110px" }}
                     >
                       <span className="inline-flex px-2 py-1 text-xs font-medium text-gray-900">
@@ -832,25 +832,25 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                       </span>
                     </td>
                     <td
-                      className="px-4 py-3 sticky bg-blue-50 text-sm text-gray-900 whitespace-nowrap z-10 border-r border-blue-300"
+                      className="px-4 py-3 sticky bg-brand-gray-soft text-sm text-gray-900 whitespace-nowrap z-10 border-r border-brand-red-muted"
                       style={{ left: "110px", width: "130px" }}
                     >
                       {fieldStr(item.fields, "Serie")}
                     </td>
                     <td
-                      className="px-4 py-3 sticky bg-blue-50 text-sm text-gray-900 whitespace-nowrap z-10 border-r border-blue-300"
+                      className="px-4 py-3 sticky bg-brand-gray-soft text-sm text-gray-900 whitespace-nowrap z-10 border-r border-brand-red-muted"
                       style={{ left: "240px", width: "130px" }}
                     >
                       {fieldStr(item.fields, "OTT")}
                     </td>
                     <td
-                      className="px-4 py-3 sticky bg-blue-50 text-sm text-gray-900 whitespace-nowrap z-10 border-r border-blue-300"
+                      className="px-4 py-3 sticky bg-brand-gray-soft text-sm text-gray-900 whitespace-nowrap z-10 border-r border-brand-red-muted"
                       style={{ left: "370px", width: "130px" }}
                     >
                       {fieldStr(item.fields, "Modelo")}
                     </td>
                     <td
-                      className="px-4 py-3 sticky bg-blue-50 text-sm text-gray-900 whitespace-nowrap z-10 border-r-4 border-blue-400 shadow-lg"
+                      className="px-4 py-3 sticky bg-brand-gray-soft text-sm text-gray-900 whitespace-nowrap z-10 border-r-4 border-brand-red shadow-lg"
                       style={{ left: "500px", width: "150px" }}
                     >
                       {fieldStr(item.fields, "Asesor")}
