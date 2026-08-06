@@ -168,17 +168,6 @@ function formatAvanceStepLabel(step: number): string {
   return `${step}% – ${upperExclusive - 1}%`;
 }
 
-function labelForAvanceFilterValue(value: string): string {
-  if (value === "100") return "100% (Completados)";
-  if (value === ">0") return ">0% y <100% (En Proceso)";
-  if (value === "0") return "0% (Pendientes)";
-  const step = Number(value);
-  if ((AVANCE_FILTER_STEPS as readonly number[]).includes(step)) {
-    return formatAvanceStepLabel(step);
-  }
-  return value;
-}
-
 function itemMatchesAllFilters(
   item: SharePointListItem,
   filters: FilterState,
@@ -300,7 +289,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     return values.map(String).sort(sortStrings);
   }, [items, filters]);
 
-  // % Avance - opciones indexadas según el resto de filtros
+  // % Avance - índice para cascada (afecta otros filtros); opciones fijas siempre visibles
   const porcentajeAvanceOptions = useMemo(() => {
     const filtered = applyFiltersExcept(items, filters, "porcentajeAvance");
     const available = new Set<string>();
@@ -324,14 +313,6 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
     return available;
   }, [items, filters]);
-
-  const avanceStepOptions = useMemo(
-    () =>
-      AVANCE_FILTER_STEPS.filter((step) =>
-        porcentajeAvanceOptions.has(String(step))
-      ),
-    [porcentajeAvanceOptions]
-  );
 
   const handleChange = (field: keyof FilterState, value: string) => {
     onFilterChange({
@@ -616,28 +597,17 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">Todos</option>
-            {porcentajeAvanceOptions.has("100") && (
-              <option value="100">100% (Completados)</option>
-            )}
-            {porcentajeAvanceOptions.has(">0") && (
-              <option value=">0">{">0% y <100%"} (En Proceso)</option>
-            )}
-            {avanceStepOptions.map((step) => (
+            <option value="100">100% (Completados)</option>
+            <option value=">0">{">0% y <100%"} (En Proceso)</option>
+            {AVANCE_FILTER_STEPS.map((step) => (
               <option key={step} value={String(step)}>
                 {formatAvanceStepLabel(step)}
+                {!porcentajeAvanceOptions.has(String(step))
+                  ? " — sin datos"
+                  : ""}
               </option>
             ))}
-            {porcentajeAvanceOptions.has("0") && (
-              <option value="0">0% (Pendientes)</option>
-            )}
-            {/* Mantener valor seleccionado aunque quede fuera del índice actual */}
-            {filters.porcentajeAvance &&
-              !porcentajeAvanceOptions.has(filters.porcentajeAvance) && (
-                <option value={filters.porcentajeAvance}>
-                  {labelForAvanceFilterValue(filters.porcentajeAvance)} (sin
-                  datos)
-                </option>
-              )}
+            <option value="0">0% (Pendientes)</option>
           </select>
         </div>
 
