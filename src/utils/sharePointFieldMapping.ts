@@ -214,3 +214,61 @@ export function calcularPorcentajeAvance(fields: Record<string, unknown>): numbe
   // Retornar como porcentaje (0-100)
   return Math.round(total * 100 * 100) / 100; // Redondeado a 2 decimales
 }
+
+/** Escalones de % avance para filtros indexados (15 → 99) */
+export const AVANCE_FILTER_STEPS = [15, 30, 45, 60, 75, 90, 99] as const;
+
+/**
+ * Normaliza el valor de % avance total desde campos de SharePoint.
+ */
+export function parsePorcentajeAvance(
+  fields: Record<string, unknown>
+): number {
+  const raw = getFieldValue(fields, "PorcentajeAvanceTotal");
+  if (typeof raw === "string") {
+    const cleaned = raw.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
+    return Number.parseFloat(cleaned) || 0;
+  }
+  return Number(raw) || 0;
+}
+
+/**
+ * Indica si un % de avance cumple el filtro seleccionado.
+ * Escalones 15/30/…/99 = rangos [step, nextStep); 99 = [99, 100).
+ */
+export function matchesPorcentajeAvanceFilter(
+  avance: number,
+  filterValue: string
+): boolean {
+  if (!filterValue) return true;
+  if (filterValue === "100") return avance === 100;
+  if (filterValue === "0") return avance === 0;
+  if (filterValue === ">0") return avance > 0 && avance < 100;
+
+  const step = Number(filterValue);
+  if (!Number.isFinite(step)) return true;
+
+  const stepIndex = AVANCE_FILTER_STEPS.indexOf(
+    step as (typeof AVANCE_FILTER_STEPS)[number]
+  );
+  if (stepIndex === -1) return false;
+
+  const lower = step;
+  const upper =
+    stepIndex < AVANCE_FILTER_STEPS.length - 1
+      ? AVANCE_FILTER_STEPS[stepIndex + 1]
+      : 100;
+  return avance >= lower && avance < upper;
+}
+
+/**
+ * Devuelve la clave de filtro de escalón (15|30|…|99) para un avance, o null.
+ */
+export function getAvanceStepFilterKey(avance: number): string | null {
+  for (const step of AVANCE_FILTER_STEPS) {
+    if (matchesPorcentajeAvanceFilter(avance, String(step))) {
+      return String(step);
+    }
+  }
+  return null;
+}
