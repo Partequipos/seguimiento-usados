@@ -14,6 +14,8 @@ import { LayoutDashboard, Table2, Plus, Loader2, Calendar } from "lucide-react";
 import {
   normalizeSharePointFields,
   getFieldValue,
+  matchesPorcentajeAvanceFilter,
+  parsePorcentajeAvance,
   toDateOnlyString,
 } from "./utils/sharePointFieldMapping";
 
@@ -207,27 +209,14 @@ function AppContent() {
         }
       }
 
-      // Filtro por % de Avance
+      // Filtro por % de Avance (incluye escalones 15%…99% indexados)
       if (filters.porcentajeAvance) {
-        const getPorcentajeAvance = (
-          fields: Record<string, unknown>
-        ): number => {
-          const raw = getFieldValue(fields, "PorcentajeAvanceTotal");
-          if (typeof raw === "string") {
-            const cleaned = raw.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
-            return Number.parseFloat(cleaned) || 0;
-          }
-          return Number(raw) || 0;
-        };
-
-        const avance = getPorcentajeAvance(item.fields);
-        if (filters.porcentajeAvance === "100" && avance !== 100) return false;
+        const avance = parsePorcentajeAvance(item.fields);
         if (
-          filters.porcentajeAvance === ">0" &&
-          (avance === 0 || avance === 100)
-        )
+          !matchesPorcentajeAvanceFilter(avance, filters.porcentajeAvance)
+        ) {
           return false;
-        if (filters.porcentajeAvance === "0" && avance !== 0) return false;
+        }
       }
 
       return true;

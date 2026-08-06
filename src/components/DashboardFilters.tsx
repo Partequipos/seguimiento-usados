@@ -8,7 +8,11 @@ import React, { useMemo } from "react";
 import { Filter, X } from "lucide-react";
 import { SharePointListItem } from "../services/sharePointService";
 import {
+  AVANCE_FILTER_STEPS,
+  getAvanceStepFilterKey,
   getFieldValue,
+  matchesPorcentajeAvanceFilter,
+  parsePorcentajeAvance,
   toDateOnlyString,
 } from "../utils/sharePointFieldMapping";
 
@@ -30,18 +34,9 @@ export interface FilterState {
   fechaCompromisoHasta: string;
   fechaFinalDesde: string;
   fechaFinalHasta: string;
-  porcentajeAvance: string; // "100" | ">0" | "0" | ""
+  /** "" | "100" | ">0" | "0" | "15" | "30" | … | "99" */
+  porcentajeAvance: string;
 }
-
-// Helper para obtener porcentaje de avance
-const getPorcentajeAvance = (fields: Record<string, unknown>): number => {
-  const raw = getFieldValue(fields, "PorcentajeAvanceTotal");
-  if (typeof raw === "string") {
-    const cleaned = raw.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
-    return Number.parseFloat(cleaned) || 0;
-  }
-  return Number(raw) || 0;
-};
 
 const sortStrings = (a: string, b: string): number => a.localeCompare(b);
 
@@ -156,12 +151,21 @@ function matchesPorcentajeAvance(
 ): boolean {
   if (excludeField === "porcentajeAvance" || !filters.porcentajeAvance)
     return true;
-  const avance = getPorcentajeAvance(item.fields as Record<string, unknown>);
-  if (filters.porcentajeAvance === "100" && avance !== 100) return false;
-  if (filters.porcentajeAvance === ">0" && (avance === 0 || avance === 100))
-    return false;
-  if (filters.porcentajeAvance === "0" && avance !== 0) return false;
-  return true;
+  const avance = parsePorcentajeAvance(item.fields as Record<string, unknown>);
+  return matchesPorcentajeAvanceFilter(avance, filters.porcentajeAvance);
+}
+
+function formatAvanceStepLabel(step: number): string {
+  const stepIndex = AVANCE_FILTER_STEPS.indexOf(
+    step as (typeof AVANCE_FILTER_STEPS)[number]
+  );
+  if (stepIndex === -1) return `${step}%`;
+  const upperExclusive =
+    stepIndex < AVANCE_FILTER_STEPS.length - 1
+      ? AVANCE_FILTER_STEPS[stepIndex + 1]
+      : 100;
+  if (step === 99) return "99% – <100%";
+  return `${step}% – ${upperExclusive - 1}%`;
 }
 
 function itemMatchesAllFilters(
@@ -283,6 +287,31 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       ),
     ];
     return values.map(String).sort(sortStrings);
+  }, [items, filters]);
+
+  // % Avance - índice para cascada (afecta otros filtros); opciones fijas siempre visibles
+  const porcentajeAvanceOptions = useMemo(() => {
+    const filtered = applyFiltersExcept(items, filters, "porcentajeAvance");
+    const available = new Set<string>();
+
+    for (const item of filtered) {
+      const avance = parsePorcentajeAvance(
+        item.fields as Record<string, unknown>
+      );
+      if (avance === 0) {
+        available.add("0");
+        continue;
+      }
+      if (avance === 100) {
+        available.add("100");
+        continue;
+      }
+      available.add(">0");
+      const stepKey = getAvanceStepFilterKey(avance);
+      if (stepKey) available.add(stepKey);
+    }
+
+    return available;
   }, [items, filters]);
 
   const handleChange = (field: keyof FilterState, value: string) => {
@@ -570,6 +599,14 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             <option value="">Todos</option>
             <option value="100">100% (Completados)</option>
             <option value=">0">{">0% y <100%"} (En Proceso)</option>
+            {AVANCE_FILTER_STEPS.map((step) => (
+              <option key={step} value={String(step)}>
+                {formatAvanceStepLabel(step)}
+                {!porcentajeAvanceOptions.has(String(step))
+                  ? " — sin datos"
+                  : ""}
+              </option>
+            ))}
             <option value="0">0% (Pendientes)</option>
           </select>
         </div>
