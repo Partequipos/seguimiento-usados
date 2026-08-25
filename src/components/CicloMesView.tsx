@@ -109,36 +109,25 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
   const metaCumplida = alistadasCount >= META_MENSUAL;
   const comisionExtraCumplida = alistadasCount >= COMISION_EXTRA_MIN;
 
-  const pieData = useMemo(
+  const kpiPieData = useMemo(
     () => [
       {
-        name: "Alistadas (100%)",
-        value: alistadasCount,
+        name: `Alistadas (${alistadasCount})`,
+        value: Math.max(alistadasCount, 1),
         color: "#16a34a",
       },
       {
-        name: "Pendientes / En proceso",
-        value: Math.max(itemsDelCiclo.length - alistadasCount, 0),
-        color: "#9ca3af",
-      },
-    ].filter((d) => d.value > 0),
-    [alistadasCount, itemsDelCiclo.length]
-  );
-
-  const metaPieData = useMemo(
-    () => [
-      {
-        name: "Alistadas",
-        value: alistadasCount,
+        name: `Meta (${META_MENSUAL})`,
+        value: META_MENSUAL,
         color: metaCumplida ? "#16a34a" : "#ef4444",
       },
       {
-        name: "Faltan para meta",
-        value: Math.max(META_MENSUAL - alistadasCount, 0),
-        color: "#e5e7eb",
+        name: `Comisión extra (≥${COMISION_EXTRA_MIN})`,
+        value: COMISION_EXTRA_MIN,
+        color: comisionExtraCumplida ? "#16a34a" : "#ef4444",
       },
-    ].filter((d) => d.value > 0),
-    [alistadasCount, metaCumplida]
+    ],
+    [alistadasCount, metaCumplida, comisionExtraCumplida]
   );
 
   return (
@@ -244,58 +233,52 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Distribución del ciclo
-          </h3>
-          <ResponsiveContainer width="100%" height={280}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                label={({ name, value }) =>
-                  `${name}: ${typeof value === "number" ? value : 0}`
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+          Alistadas · Meta · Comisión extra
+        </h3>
+        <p className="text-center text-gray-600 mb-4">
+          Meta y comisión en{" "}
+          <span className="text-green-600 font-semibold">verde</span> si se
+          cumple, en <span className="text-red-600 font-semibold">rojo</span> si
+          no
+        </p>
+        <ResponsiveContainer width="100%" height={320}>
+          <PieChart>
+            <Pie
+              data={kpiPieData}
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              dataKey="value"
+              label={({ name }) => name}
+            >
+              {kpiPieData.map((entry) => (
+                <Cell key={entry.name} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: number, name: string) => {
+                if (name.startsWith("Alistadas")) {
+                  return [alistadasCount, name];
                 }
-              >
-                {pieData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Avance vs Meta ({META_MENSUAL})
-          </h3>
-          <ResponsiveContainer width="100%" height={280}>
-            <PieChart>
-              <Pie
-                data={metaPieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                label={({ name, value }) =>
-                  `${name}: ${typeof value === "number" ? value : 0}`
+                if (name.startsWith("Meta")) {
+                  return [
+                    `${alistadasCount} / ${META_MENSUAL}`,
+                    metaCumplida ? "Meta cumplida" : "Meta pendiente",
+                  ];
                 }
-              >
-                {metaPieData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+                return [
+                  `${alistadasCount} alistadas (mín. ${COMISION_EXTRA_MIN})`,
+                  comisionExtraCumplida
+                    ? "Comisión extra alcanzada"
+                    : "Comisión extra pendiente",
+                ];
+              }}
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Leyenda semáforo */}
