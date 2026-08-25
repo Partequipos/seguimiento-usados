@@ -1,9 +1,9 @@
 /**
  * Visualización Ciclo-Mes — tablero para proyección en TV
- * Tabla por prioridad (1-10) con semáforo de avance y KPIs de meta/comisión.
+ * Tabla ordenable (prioridad / % avance / manual) con semáforo y KPIs.
  */
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -12,12 +12,24 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Target, Award, CheckCircle2, Filter } from "lucide-react";
+import {
+  Target,
+  Award,
+  CheckCircle2,
+  Filter,
+  GripVertical,
+  ArrowUpDown,
+} from "lucide-react";
 import { SharePointListItem } from "../services/sharePointService";
-import { getFieldValue, parsePorcentajeAvance } from "../utils/sharePointFieldMapping";
+import {
+  getFieldValue,
+  parsePorcentajeAvance,
+} from "../utils/sharePointFieldMapping";
 
 const META_MENSUAL = 12;
 const COMISION_EXTRA_MIN = 10;
+
+type SortMode = "prioridad" | "avance" | "manual";
 
 interface CicloMesViewProps {
   items: SharePointListItem[];
@@ -42,8 +54,7 @@ function normalizeCicloValue(raw: unknown): string {
 }
 
 function getPrioridad(fields: Record<string, unknown>): number {
-  const value = Number(getFieldValue(fields, "Prioridad")) || 0;
-  return value;
+  return Number(getFieldValue(fields, "Prioridad")) || 0;
 }
 
 function getAvanceRowClass(avance: number): string {
@@ -58,7 +69,10 @@ function getAvanceTextClass(avance: number): string {
   return "text-red-900";
 }
 
-function sortByPrioridad(a: SharePointListItem, b: SharePointListItem): number {
+function comparePrioridad(
+  a: SharePointListItem,
+  b: SharePointListItem
+): number {
   const pa = getPrioridad(a.fields);
   const pb = getPrioridad(b.fields);
   const aInRange = pa >= 1 && pa <= 10;
@@ -71,6 +85,71 @@ function sortByPrioridad(a: SharePointListItem, b: SharePointListItem): number {
   return fieldStr(a.fields, "Serie").localeCompare(fieldStr(b.fields, "Serie"));
 }
 
+function compareAvance(a: SharePointListItem, b: SharePointListItem): number {
+  const avanceA = parsePorcentajeAvance(a.fields);
+  const avanceB = parsePorcentajeAvance(b.fields);
+  if (avanceA !== avanceB) return avanceA - avanceB;
+  return comparePrioridad(a, b);
+}
+
+/** Las de 100% siempre van al final; el resto según el comparador. */
+function sortWithCompletedLast(
+  list: SharePointListItem[],
+  compareActive: (a: SharePointListItem, b: SharePointListItem) => number
+): SharePointListItem[] {
+  const active = list.filter(
+    (item) => parsePorcentajeAvance(item.fields) < 100
+  );
+  const completed = list.filter(
+    (item) => parsePorcentajeAvance(item.fields) === 100
+  );
+  active.sort(compareActive);
+  completed.sort(comparePrioridad);
+  return [...active, ...completed];
+}
+
+function applyManualOrder(
+  list: SharePointListItem[],
+  orderIds: string[]
+): SharePointListItem[] {
+  const byId = new Map(list.map((item) => [item.id, item]));
+  const ordered: SharePointListItem[] = [];
+
+  for (const id of orderIds) {
+    const item = byId.get(id);
+    if (item) {
+      ordered.push(item);
+      byId.delete(id);
+    }
+  }
+  for (const item of byId.values()) {
+    ordered.push(item);
+  }
+
+  const active = ordered.filter(
+    (item) => parsePorcentajeAvance(item.fields) < 100
+  );
+  const completed = ordered.filter(
+    (item) => parsePorcentajeAvance(item.fields) === 100
+  );
+  return [...active, ...completed];
+}
+
+function reorderIds(
+  ids: string[],
+  fromId: string,
+  toId: string
+): string[] | null {
+  if (fromId === toId) return null;
+  const next = [...ids];
+  const fromIndex = next.indexOf(fromId);
+  const toIndex = next.indexOf(toId);
+  if (fromIndex < 0 || toIndex < 0) return null;
+  next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, fromId);
+  return next;
+}
+
 const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
   const ciclosDisponibles = useMemo(() => {
     const set = new Set<string>();
@@ -78,10 +157,15 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
       const ciclo = normalizeCicloValue(getFieldValue(item.fields, "Ciclo"));
       if (ciclo) set.add(ciclo);
     }
-    return [...set].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    return [...set].sort((a, b) =>
+      a.localeCompare(b, undefined, { numeric: true })
+    );
   }, [items]);
 
   const [selectedCiclo, setSelectedCiclo] = useState<string>("");
+  const [sortMode, setSortMode] = useState<SortMode>("prioridad");
+  const [manualOrderIds, setManualOrderIds] = useState<string[]>([]);
+  const [draggedId, setDraggedId] = useState<string | null>(null);
 
   const cicloActivo = selectedCiclo || ciclosDisponibles[0] || "";
 
@@ -93,10 +177,99 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
     );
   }, [items, cicloActivo]);
 
-  const sortedItems = useMemo(
-    () => [...itemsDelCiclo].sort(sortByPrioridad),
-    [itemsDelCiclo]
+  // Al cambiar de ciclo, volver a orden por prioridad
+  useEffect(() => {
+    setSortMode("prioridad");
+    setManualOrderIds([]);
+    setDraggedId(null);
+  }, [cicloActivo]);
+
+  // Mantener el orden manual sincronizado con los ítems del ciclo
+  useEffect(() => {
+    if (sortMode !== "manual") return;
+    setManualOrderIds((prev) => {
+      const currentIds = new Set(itemsDelCiclo.map((i) => i.id));
+      const kept = prev.filter((id) => currentIds.has(id));
+      const missing = itemsDelCiclo
+        .map((i) => i.id)
+        .filter((id) => !kept.includes(id));
+      if (kept.length === prev.length && missing.length === 0) return prev;
+      return [...kept, ...missing];
+    });
+  }, [itemsDelCiclo, sortMode]);
+
+  const displayItems = useMemo(() => {
+    if (sortMode === "manual") {
+      const baseOrder =
+        manualOrderIds.length > 0
+          ? manualOrderIds
+          : itemsDelCiclo.map((i) => i.id);
+      return applyManualOrder(itemsDelCiclo, baseOrder);
+    }
+    if (sortMode === "avance") {
+      return sortWithCompletedLast(itemsDelCiclo, compareAvance);
+    }
+    return sortWithCompletedLast(itemsDelCiclo, comparePrioridad);
+  }, [itemsDelCiclo, sortMode, manualOrderIds]);
+
+  const handleSortModeChange = (mode: SortMode) => {
+    if (mode === "manual") {
+      const currentIds = displayItems.map((i) => i.id);
+      setManualOrderIds(currentIds);
+    }
+    setSortMode(mode);
+  };
+
+  const handleDragStart = (itemId: string, avance: number) => {
+    if (avance === 100) return;
+    setDraggedId(itemId);
+    if (sortMode !== "manual") {
+      setManualOrderIds(displayItems.map((i) => i.id));
+      setSortMode("manual");
+    }
+  };
+
+  const handleDragOver = useCallback(
+    (event: React.DragEvent<HTMLTableRowElement>, targetId: string) => {
+      event.preventDefault();
+      if (!draggedId || draggedId === targetId) return;
+      const targetItem = itemsDelCiclo.find((i) => i.id === targetId);
+      if (
+        targetItem &&
+        parsePorcentajeAvance(targetItem.fields) === 100
+      ) {
+        return;
+      }
+    },
+    [draggedId, itemsDelCiclo]
   );
+
+  const handleDrop = (targetId: string) => {
+    if (!draggedId) return;
+    const targetItem = itemsDelCiclo.find((i) => i.id === targetId);
+    const draggedItem = itemsDelCiclo.find((i) => i.id === draggedId);
+
+    if (
+      !targetItem ||
+      !draggedItem ||
+      parsePorcentajeAvance(targetItem.fields) === 100 ||
+      parsePorcentajeAvance(draggedItem.fields) === 100
+    ) {
+      setDraggedId(null);
+      return;
+    }
+
+    const baseIds =
+      manualOrderIds.length > 0
+        ? manualOrderIds
+        : displayItems.map((i) => i.id);
+    const reordered = reorderIds(baseIds, draggedId, targetId);
+    if (reordered) {
+      setManualOrderIds(reordered);
+      setSortMode("manual");
+    }
+    setDraggedId(null);
+  };
 
   const alistadasCount = useMemo(
     () =>
@@ -130,6 +303,13 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
     [alistadasCount, metaCumplida, comisionExtraCumplida]
   );
 
+  const sortButtonClass = (mode: SortMode) =>
+    `px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+      sortMode === mode
+        ? "bg-blue-600 text-white border-blue-600"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+    }`;
+
   return (
     <div className="w-full space-y-6">
       {/* Selector de ciclo */}
@@ -162,12 +342,12 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
           </select>
         </div>
         <p className="text-lg text-gray-600">
-          <span className="font-bold text-gray-900">{sortedItems.length}</span>{" "}
+          <span className="font-bold text-gray-900">{displayItems.length}</span>{" "}
           equipos en {cicloActivo || "—"}
         </p>
       </div>
 
-      {/* KPIs y gráficos */}
+      {/* KPIs */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -258,7 +438,7 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number, name: string) => {
+              formatter={(_value: number, name: string) => {
                 if (name.startsWith("Alistadas")) {
                   return [alistadasCount, name];
                 }
@@ -299,18 +479,47 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
 
       {/* Tabla grande para TV */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h3 className="text-2xl font-bold text-gray-900">
-            Tablero por Prioridad — {cicloActivo || "Sin ciclo"}
-          </h3>
-          <p className="text-gray-600 mt-1">
-            Orden: prioridad 1 → 10 · Proyección para técnicos de alistamiento
-          </p>
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 className="text-2xl font-bold text-gray-900">
+              Tablero por Prioridad — {cicloActivo || "Sin ciclo"}
+            </h3>
+            <p className="text-gray-600 mt-1 flex items-center gap-2">
+              <ArrowUpDown className="w-4 h-4" />
+              Ordena por prioridad o % avance, o arrastra filas. Las de 100%
+              quedan al final.
+            </p>
+          </div>
+          <fieldset className="flex flex-wrap gap-2 border-0 p-0 m-0">
+            <legend className="sr-only">Orden de tabla</legend>
+            <button
+              type="button"
+              className={sortButtonClass("prioridad")}
+              onClick={() => handleSortModeChange("prioridad")}
+            >
+              Por prioridad
+            </button>
+            <button
+              type="button"
+              className={sortButtonClass("avance")}
+              onClick={() => handleSortModeChange("avance")}
+            >
+              Por % avance
+            </button>
+            <button
+              type="button"
+              className={sortButtonClass("manual")}
+              onClick={() => handleSortModeChange("manual")}
+            >
+              Orden manual
+            </button>
+          </fieldset>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
             <thead>
               <tr className="bg-gray-600 text-white text-left">
+                <th className="px-3 py-5 text-xl font-bold w-14" aria-label="Mover" />
                 <th className="px-6 py-5 text-xl font-bold w-28">Prioridad</th>
                 <th className="px-6 py-5 text-xl font-bold">Serie</th>
                 <th className="px-6 py-5 text-xl font-bold">Modelo</th>
@@ -323,24 +532,46 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
               </tr>
             </thead>
             <tbody>
-              {sortedItems.length === 0 ? (
+              {displayItems.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-6 py-12 text-center text-xl text-gray-500"
                   >
                     No hay registros para el ciclo seleccionado
                   </td>
                 </tr>
               ) : (
-                sortedItems.map((item) => {
+                displayItems.map((item) => {
                   const avance = parsePorcentajeAvance(item.fields);
                   const prioridad = getPrioridad(item.fields);
+                  const isCompleted = avance === 100;
+                  const isDragging = draggedId === item.id;
+
                   return (
                     <tr
                       key={item.id}
-                      className={`border-b border-gray-300 ${getAvanceRowClass(avance)}`}
+                      draggable={!isCompleted}
+                      onDragStart={() => handleDragStart(item.id, avance)}
+                      onDragOver={(e) => handleDragOver(e, item.id)}
+                      onDrop={() => handleDrop(item.id)}
+                      onDragEnd={() => setDraggedId(null)}
+                      className={`border-b border-gray-300 ${getAvanceRowClass(avance)} ${
+                        isDragging ? "opacity-50" : ""
+                      } ${isCompleted ? "cursor-default" : "cursor-grab active:cursor-grabbing"}`}
                     >
+                      <td className="px-3 py-5 text-center">
+                        {isCompleted ? (
+                          <span className="text-gray-400 text-xs font-semibold">
+                            100%
+                          </span>
+                        ) : (
+                          <GripVertical
+                            className="w-6 h-6 text-gray-500 mx-auto"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </td>
                       <td className="px-6 py-5">
                         <span className="inline-flex items-center justify-center min-w-[3rem] px-4 py-2 text-2xl font-black bg-gray-500 text-white rounded-lg">
                           {prioridad || "—"}
