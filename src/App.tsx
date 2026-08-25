@@ -10,7 +10,8 @@ import {
   SharePointListItem,
 } from "./services/sharePointService";
 import { realItems } from "./data/mockDataReal";
-import { LayoutDashboard, Table2, Plus, Loader2, Calendar } from "lucide-react";
+import CicloMesView from "./components/CicloMesView";
+import { LayoutDashboard, Table2, Plus, Loader2, Calendar, Monitor } from "lucide-react";
 import {
   normalizeSharePointFields,
   getFieldValue,
@@ -19,7 +20,7 @@ import {
   toDateOnlyString,
 } from "./utils/sharePointFieldMapping";
 
-type View = "dashboard" | "table";
+type View = "dashboard" | "table" | "ciclo-mes";
 
 /** Payload del formulario de equipo (VehicleFormReal) */
 interface VehicleFormPayload {
@@ -528,6 +529,24 @@ function AppContent() {
     }
   };
 
+  const renderMainView = () => {
+    if (currentView === "dashboard") {
+      return <DashboardReal items={filteredItems} />;
+    }
+    if (currentView === "table") {
+      return (
+        <SharePointTableReal
+          items={filteredItems}
+          useMockData={useMockData}
+          onEdit={setEditingVehicle}
+          onDelete={handleDeleteVehicle}
+          onRefresh={useMockData ? loadMockData : loadRealData}
+        />
+      );
+    }
+    return <CicloMesView items={items} />;
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -567,6 +586,7 @@ function AppContent() {
           <div className="flex items-center justify-between">
             <div className="flex space-x-4">
               <button
+                type="button"
                 onClick={() => setCurrentView("dashboard")}
                 className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
                   currentView === "dashboard"
@@ -578,6 +598,7 @@ function AppContent() {
                 Dashboard
               </button>
               <button
+                type="button"
                 onClick={() => setCurrentView("table")}
                 className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
                   currentView === "table"
@@ -588,8 +609,21 @@ function AppContent() {
                 <Table2 className="w-5 h-5" />
                 Tabla de Datos
               </button>
+              <button
+                type="button"
+                onClick={() => setCurrentView("ciclo-mes")}
+                className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
+                  currentView === "ciclo-mes"
+                    ? "border-blue-600 text-blue-600 font-medium"
+                    : "border-transparent text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Monitor className="w-5 h-5" />
+                Visualización Ciclo-Mes
+              </button>
             </div>
             <button
+              type="button"
               onClick={() => setShowForm(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
@@ -618,17 +652,7 @@ function AppContent() {
                 />
               </div>
             )}
-            {currentView === "dashboard" ? (
-              <DashboardReal items={filteredItems} />
-            ) : (
-              <SharePointTableReal
-                items={filteredItems}
-                useMockData={useMockData}
-                onEdit={setEditingVehicle}
-                onDelete={handleDeleteVehicle}
-                onRefresh={useMockData ? loadMockData : loadRealData}
-              />
-            )}
+            {renderMainView()}
           </>
         )}
       </main>
