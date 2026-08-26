@@ -367,13 +367,13 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   })();
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 mb-6 w-full">
+    <div className="panel-brand p-6 mb-6 w-full border-l-4 border-l-brand-red">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Filter className="w-5 h-5 text-blue-600" />
+          <Filter className="w-5 h-5 text-brand-red" />
           <h3 className="text-lg font-semibold text-gray-900">Filtros</h3>
           {hasActiveFilters && (
-            <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+            <span className="ml-2 px-2 py-1 bg-brand-red-soft text-brand-red-dark text-xs font-medium rounded">
               Filtros activos
             </span>
           )}
@@ -402,7 +402,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-sede"
             value={filters.sede}
             onChange={(e) => handleChange("sede", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todas las sedes</option>
             {sedes.map((sede) => (
@@ -425,7 +425,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-asesor"
             value={filters.asesor}
             onChange={(e) => handleChange("asesor", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todos los asesores</option>
             {asesores.map((asesor) => (
@@ -448,7 +448,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-cliente"
             value={filters.cliente}
             onChange={(e) => handleChange("cliente", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todos los clientes</option>
             {clientes.map((cliente) => (
@@ -471,7 +471,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-serie"
             value={filters.serie}
             onChange={(e) => handleChange("serie", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todas las series</option>
             {series.map((serie) => (
@@ -494,7 +494,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-fase"
             value={filters.fase}
             onChange={(e) => handleChange("fase", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todas las fases</option>
             {Array.from({ length: 16 }, (_, i) => i + 1).map((num) => (
@@ -517,7 +517,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-observaciones"
             value={filters.observaciones}
             onChange={(e) => handleChange("observaciones", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todas</option>
             {observaciones.map((obs) => (
@@ -529,7 +529,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         </div>
 
         {/* Ciclo - selección múltiple (lista contraíble) */}
-        <details className="group border border-gray-300 rounded-lg bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+        <details className="group border border-gray-300 rounded-lg bg-white focus-within:ring-2 focus-within:ring-brand-red/40 focus-within:border-transparent">
           <summary className="text-sm font-medium text-gray-700 px-3 py-2 cursor-pointer list-none flex items-center justify-between gap-2 hover:bg-gray-50 rounded-lg [&::-webkit-details-marker]:hidden">
             <span>
               Ciclo
@@ -548,7 +548,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               <button
                 type="button"
                 onClick={handleCicloSelectAll}
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                className="text-xs text-brand-red hover:text-brand-red-dark font-medium"
               >
                 Todos
               </button>
@@ -570,7 +570,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                     type="checkbox"
                     checked={filters.ciclo.includes(ciclo)}
                     onChange={() => handleCicloToggle(ciclo)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-brand-red focus:ring-brand-red/40"
                   />
                   <span>{ciclo}</span>
                 </label>
@@ -594,7 +594,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             id="filter-porcentajeAvance"
             value={filters.porcentajeAvance}
             onChange={(e) => handleChange("porcentajeAvance", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           >
             <option value="">Todos</option>
             <option value="100">100% (Completados)</option>
@@ -626,7 +626,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             onChange={(e) =>
               handleChange("fechaCompromisoDesde", e.target.value)
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           />
         </div>
 
@@ -645,7 +645,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             onChange={(e) =>
               handleChange("fechaCompromisoHasta", e.target.value)
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           />
         </div>
 
@@ -662,7 +662,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             type="date"
             value={filters.fechaFinalDesde}
             onChange={(e) => handleChange("fechaFinalDesde", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           />
         </div>
 
@@ -679,7 +679,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             type="date"
             value={filters.fechaFinalHasta}
             onChange={(e) => handleChange("fechaFinalHasta", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
           />
         </div>
       </div>

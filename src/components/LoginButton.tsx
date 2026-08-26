@@ -12,8 +12,9 @@ const LoginButton: React.FC = () => {
   if (isLoading) {
     return (
       <button
+        type="button"
         disabled
-        className="flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-600 rounded-lg cursor-not-allowed"
+        className="flex items-center gap-2 px-4 py-2 bg-brand-gray-soft text-brand-gray-light rounded-lg cursor-not-allowed border border-brand-gray-border"
       >
         <Loader2 className="w-5 h-5 animate-spin" />
         Cargando...
@@ -24,13 +25,14 @@ const LoginButton: React.FC = () => {
   if (isAuthenticated && account) {
     return (
       <div className="flex items-center gap-3">
-        <div className="text-right">
-          <p className="text-sm font-medium text-gray-900">{account.name}</p>
-          <p className="text-xs text-gray-500">{account.username}</p>
+        <div className="text-right hidden sm:block">
+          <p className="text-sm font-semibold text-brand-ink">{account.name}</p>
+          <p className="text-xs text-brand-gray-light">{account.username}</p>
         </div>
         <button
+          type="button"
           onClick={logout}
-          className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-gray hover:bg-brand-ink text-brand-white rounded-lg transition-colors font-medium"
         >
           <LogOut className="w-5 h-5" />
           Cerrar Sesión
@@ -40,10 +42,7 @@ const LoginButton: React.FC = () => {
   }
 
   return (
-    <button
-      onClick={login}
-      className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-    >
+    <button type="button" onClick={login} className="btn-brand">
       <LogIn className="w-5 h-5" />
       Iniciar Sesión con Microsoft
     </button>

@@ -273,7 +273,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-brand-red-soft to-white">
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               {isEditing ? "Editar Equipo" : "Agregar Nuevo Equipo"}
@@ -282,7 +282,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
             {isEditing && (watchedSerie || watchedModelo || watchedAsesor) && (
               <div className="flex flex-wrap items-center gap-3 mt-3">
                 {watchedSerie && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-lg border border-blue-200">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-red-soft text-brand-red-dark rounded-lg border border-brand-red-muted">
                     <span className="text-xs font-semibold uppercase tracking-wide">Serie:</span>
                     <span className="font-bold">{watchedSerie}</span>
                   </div>
@@ -318,7 +318,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
               onClick={() => setCurrentTab("general")}
               className={`px-4 py-3 border-b-2 transition-colors ${
                 currentTab === "general"
-                  ? "border-blue-600 text-blue-600 font-medium"
+                  ? "border-brand-red text-brand-red font-medium"
                   : "border-transparent text-gray-600 hover:text-gray-900"
               }`}
             >
@@ -329,7 +329,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
               onClick={() => setCurrentTab("fases")}
               className={`px-4 py-3 border-b-2 transition-colors ${
                 currentTab === "fases"
-                  ? "border-blue-600 text-blue-600 font-medium"
+                  ? "border-brand-red text-brand-red font-medium"
                   : "border-transparent text-gray-600 hover:text-gray-900"
               }`}
             >
@@ -353,7 +353,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                       required: "El cliente es obligatorio",
                     })}
                     type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     placeholder="Ingrese el nombre del cliente"
                   />
                   {errors.Title && (
@@ -373,7 +373,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                       required: "La serie es obligatoria",
                     })}
                     type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     placeholder="2024-001"
                   />
                   {errors.Serie && (
@@ -392,7 +392,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     {...register("Modelo", {
                       required: "El modelo es obligatorio",
                     })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   >
                     <option value="">Seleccione un modelo</option>
                     {modeloOptions.map((modelo) => (
@@ -416,7 +416,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                   <input
                     {...register("OTT", { required: "El OTT es obligatorio" })}
                     type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     placeholder="OTT-2024-001"
                   />
                   {errors.OTT && (
@@ -435,7 +435,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     {...register("Asesor", {
                       required: "El asesor es obligatorio",
                     })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   >
                     <option value="">Seleccione un asesor</option>
                     {asesorOptions.map((asesor) => (
@@ -463,7 +463,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     })}
                     type="number"
                     step="1"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     placeholder="Ingrese un número"
                   />
                   {errors.Prioridad && (
@@ -482,7 +482,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     {...register("Sede", {
                       required: "La sede es obligatoria",
                     })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   >
                     <option value="">Seleccione una sede</option>
                     {sedeOptions.map((sede) => (
@@ -512,7 +512,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     type="number"
                     min="1"
                     step="1"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     placeholder="Ingrese el número de ciclo"
                   />
                   {errors.Ciclo && (
@@ -530,7 +530,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                   <input
                     {...register("FechaSolicitud")}
                     type="date"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   />
                   {errors.FechaSolicitud && (
                     <p className="mt-1 text-sm text-red-600">
@@ -547,7 +547,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                   <input
                     {...register("FechaCompromisoComercial")}
                     type="date"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   />
                   {errors.FechaCompromisoComercial && (
                     <p className="mt-1 text-sm text-red-600">
@@ -567,7 +567,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                       required: "La fecha es obligatoria",
                     })}
                     type="date"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   />
                   {errors.FechaInicioCiclo && (
                     <p className="mt-1 text-sm text-red-600">
@@ -583,7 +583,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                   </label>
                   <select
                     {...register("Observaciones")}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                   >
                     <option value="">Seleccione una observación</option>
                     {observacionesOptions.map((obs) => (
@@ -599,7 +599,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     📎 Adjuntos (Fotos/Archivos)
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-brand-red-muted transition-colors">
                     <div className="flex items-center justify-center">
                       <label className="cursor-pointer flex flex-col items-center">
                         <Upload className="w-8 h-8 text-gray-400 mb-2" />
@@ -629,10 +629,10 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                       {selectedFiles.map((file, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between p-2 bg-blue-50 rounded-lg border border-blue-200"
+                          className="flex items-center justify-between p-2 bg-brand-red-soft rounded-lg border border-brand-red-muted"
                         >
                           <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <FileIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                            <FileIcon className="w-4 h-4 text-brand-red flex-shrink-0" />
                             <span className="text-sm text-gray-900 truncate">
                               {file.name}
                             </span>
@@ -657,7 +657,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
             ) : (
               /* Pestaña de Fases */
               <div>
-                <div className="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <div className="mb-6 p-4 bg-brand-red-soft rounded-lg border-l-4 border-blue-500">
                   <p className="text-sm text-blue-800">
                     <strong>📋 Instrucciones:</strong> Selecciona el porcentaje de cada
                     fase del alistamiento (0%, 25%, 50%, 75%, 100%). El % de avance total se calculará
@@ -676,7 +676,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                       </p>
                       <select
                         {...register(`F${num}` as any)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent text-sm bg-white"
                       >
                         {faseOptions.map((option) => (
                           <option key={option} value={option}>
@@ -705,7 +705,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                     <input
                       {...register("FechaFinalAlistamiento")}
                       type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -742,7 +742,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 bg-brand-red text-white rounded-lg hover:bg-brand-red-dark transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>
