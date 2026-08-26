@@ -306,7 +306,7 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
   const sortButtonClass = (mode: SortMode) =>
     `px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
       sortMode === mode
-        ? "bg-blue-600 text-white border-blue-600"
+        ? "bg-brand-red text-white border-brand-red"
         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
     }`;
 
@@ -315,7 +315,7 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
       {/* Selector de ciclo */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-wrap items-end gap-4">
         <div className="flex items-center gap-2 text-gray-800">
-          <Filter className="w-6 h-6 text-blue-600" />
+          <Filter className="w-6 h-6 text-brand-red" />
           <h2 className="text-2xl font-bold">Visualización Ciclo-Mes</h2>
         </div>
         <div className="flex-1 min-w-[220px] max-w-md">
@@ -329,7 +329,7 @@ const CicloMesView: React.FC<CicloMesViewProps> = ({ items }) => {
             id="ciclo-mes-selector"
             value={cicloActivo}
             onChange={(e) => setSelectedCiclo(e.target.value)}
-            className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red/40 focus:border-transparent bg-white"
           >
             {ciclosDisponibles.length === 0 && (
               <option value="">Sin ciclos disponibles</option>
