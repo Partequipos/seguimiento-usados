@@ -529,23 +529,8 @@ function AppContent() {
     }
   };
 
-  const renderMainView = () => {
-    if (currentView === "dashboard") {
-      return <DashboardReal items={filteredItems} />;
-    }
-    if (currentView === "table") {
-      return (
-        <SharePointTableReal
-          items={filteredItems}
-          useMockData={useMockData}
-          onEdit={setEditingVehicle}
-          onDelete={handleDeleteVehicle}
-          onRefresh={useMockData ? loadMockData : loadRealData}
-        />
-      );
-    }
-    return <CicloMesView items={items} />;
-  };
+  const viewPanelClass = (view: View) =>
+    currentView === view ? "w-full" : "hidden";
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -643,7 +628,7 @@ function AppContent() {
           </div>
         ) : (
           <>
-            {currentView === "dashboard" && (
+            <div className={viewPanelClass("dashboard")}>
               <div className="w-full mb-6">
                 <DashboardFilters
                   items={items}
@@ -651,8 +636,20 @@ function AppContent() {
                   onFilterChange={setFilters}
                 />
               </div>
-            )}
-            {renderMainView()}
+              <DashboardReal items={filteredItems} />
+            </div>
+            <div className={viewPanelClass("table")}>
+              <SharePointTableReal
+                items={filteredItems}
+                useMockData={useMockData}
+                onEdit={setEditingVehicle}
+                onDelete={handleDeleteVehicle}
+                onRefresh={useMockData ? loadMockData : loadRealData}
+              />
+            </div>
+            <div className={viewPanelClass("ciclo-mes")}>
+              <CicloMesView items={items} />
+            </div>
           </>
         )}
       </main>
