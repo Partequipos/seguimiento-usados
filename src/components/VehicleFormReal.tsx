@@ -661,8 +661,9 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                 <div className="mb-6 p-4 bg-brand-red-soft rounded-lg border-l-4 border-blue-500">
                   <p className="text-sm text-blue-800">
                     <strong>📋 Instrucciones:</strong> Selecciona el porcentaje de cada
-                    fase del alistamiento (0%, 25%, 50%, 75%, 100% o NA). El % de avance total se calculará
-                    automáticamente en SharePoint. NA = no aplica (no suma al avance).
+                    fase del alistamiento (0%, 25%, 50%, 75%, 100% o NA). NA = no aplica:
+                    esa fase se excluye del cálculo y el % de avance se redistribuye entre
+                    las fases aplicables (aunque SharePoint no lo mida).
                   </p>
                 </div>
 

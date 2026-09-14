@@ -20,6 +20,7 @@ import { TrendingUp, Clock, CheckCircle, AlertCircle, Car } from "lucide-react";
 import { SharePointListItem } from "../services/sharePointService";
 import {
   getFieldValue,
+  parsePorcentajeAvance,
 } from "../utils/sharePointFieldMapping";
 
 interface DashboardRealProps {
@@ -105,14 +106,8 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
     return "";
   };
 
-  const getPorcentajeAvance = (fields: Record<string, unknown>): number => {
-    const raw = getFieldValue(fields, "PorcentajeAvanceTotal");
-    if (typeof raw === "string") {
-      const cleaned = raw.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
-      return Number.parseFloat(cleaned) || 0;
-    }
-    return Number(raw) || 0;
-  };
+  const getPorcentajeAvance = (fields: Record<string, unknown>): number =>
+    parsePorcentajeAvance(fields);
 
   // Ordenar items por % Avance (menor a mayor)
   const sortedItems = [...items].sort((a, b) => {

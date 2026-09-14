@@ -165,78 +165,134 @@ export function getFieldValue(
 }
 
 /**
- * Calcula el porcentaje de avance total basado en las fases F1-F16
- * Usa la fórmula de SharePoint: =(F1*0.0227272727272727)+...+(F16*0.0227272727272727)
- * Las fases deben estar en formato "0%", "25%", "50%", "75%", "100%" o "NA"
+ * Valores válidos de cada fase F1–F16 (incluye NA = no aplica)
  */
-export function calcularPorcentajeAvance(fields: Record<string, unknown>): number {
-  const pesos = [
-    0.0227272727272727, // F1
-    0.0227272727272727, // F2
-    0.0454545454545455, // F3
-    0.0227272727272727, // F4
-    0.0454545454545455, // F5
-    0.113636363636364,  // F6
-    0.136363636363636,  // F7
-    0.0909090909090909, // F8
-    0.136363636363636,  // F9
-    0.0681818181818182, // F10
-    0.0454545454545455, // F11
-    0.0454545454545455, // F12
-    0.0227272727272727, // F13
-    0.0227272727272727, // F14
-    0.136363636363636,  // F15
-    0.0227272727272727, // F16
-  ];
-
-  let total = 0;
-
-  for (let i = 1; i <= 16; i++) {
-    const faseValue = getFieldValue(fields, `F${i}`);
-    const valorNumerico = parseFaseToDecimal(faseValue);
-    total += valorNumerico * pesos[i - 1];
-  }
-
-  // Retornar como porcentaje (0-100)
-  return Math.round(total * 100 * 100) / 100; // Redondeado a 2 decimales
-}
-
-/** Valores válidos de cada fase F1–F16 (incluye NA = no aplica) */
 export const FASE_OPTIONS = ["0%", "25%", "50%", "75%", "100%", "NA"] as const;
 export type FaseOption = (typeof FASE_OPTIONS)[number];
 
+const FASE_WEIGHTS = [
+  0.0227272727272727, // F1
+  0.0227272727272727, // F2
+  0.0454545454545455, // F3
+  0.0227272727272727, // F4
+  0.0454545454545455, // F5
+  0.113636363636364, // F6
+  0.136363636363636, // F7
+  0.0909090909090909, // F8
+  0.136363636363636, // F9
+  0.0681818181818182, // F10
+  0.0454545454545455, // F11
+  0.0454545454545455, // F12
+  0.0227272727272727, // F13
+  0.0227272727272727, // F14
+  0.136363636363636, // F15
+  0.0227272727272727, // F16
+] as const;
+
+export function isFaseNA(faseValue: unknown): boolean {
+  if (faseValue == null) return false;
+  if (typeof faseValue === "string") {
+    return faseValue.trim().toUpperCase() === "NA";
+  }
+  return false;
+}
+
 /**
  * Convierte el valor de una fase a decimal 0–1.
- * "NA" y valores no numéricos aportan 0 al avance.
+ * "NA" y valores no numéricos aportan 0 (y además se excluyen del peso total).
  */
 export function parseFaseToDecimal(faseValue: unknown): number {
-  if (faseValue == null) return 0;
+  if (faseValue == null || isFaseNA(faseValue)) return 0;
   const rawStr =
     typeof faseValue === "string"
       ? faseValue.trim()
       : typeof faseValue === "number"
         ? String(faseValue)
         : "";
-  if (!rawStr || rawStr.toUpperCase() === "NA") return 0;
+  if (!rawStr) return 0;
   const porcentajeNum = Number.parseFloat(rawStr.replaceAll("%", "")) || 0;
   return porcentajeNum / 100;
+}
+
+export function hasAnyFaseNA(fields: Record<string, unknown>): boolean {
+  for (let i = 1; i <= 16; i++) {
+    if (isFaseNA(getFieldValue(fields, `F${i}`))) return true;
+  }
+  return false;
+}
+
+function tryParseAvanceNumber(raw: unknown): number | null {
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "number") {
+    return Number.isFinite(raw) ? raw : null;
+  }
+  if (typeof raw !== "string") return null;
+
+  const trimmed = raw.trim();
+  if (!trimmed || trimmed.startsWith("#")) return null;
+
+  const upper = trimmed.toUpperCase();
+  if (
+    upper === "NA" ||
+    upper === "N/A" ||
+    upper.includes("VALUE") ||
+    upper.includes("ERROR")
+  ) {
+    return null;
+  }
+
+  const cleaned = trimmed.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
+  if (!cleaned) return null;
+  const num = Number.parseFloat(cleaned);
+  return Number.isFinite(num) ? num : null;
+}
+
+/**
+ * Calcula el % de avance total a partir de F1–F16.
+ * Las fases en "NA" se excluyen y su peso se redistribuye entre las aplicables,
+ * para que el avance llegue a 100% cuando todas las fases aplicables estén al 100%.
+ */
+export function calcularPorcentajeAvance(
+  fields: Record<string, unknown>
+): number {
+  let pesoAplicable = 0;
+  let totalPonderado = 0;
+
+  for (let i = 1; i <= 16; i++) {
+    const faseValue = getFieldValue(fields, `F${i}`);
+    if (isFaseNA(faseValue)) continue;
+
+    const peso = FASE_WEIGHTS[i - 1];
+    pesoAplicable += peso;
+    totalPonderado += parseFaseToDecimal(faseValue) * peso;
+  }
+
+  if (pesoAplicable <= 0) return 0;
+
+  const porcentaje = (totalPonderado / pesoAplicable) * 100;
+  return Math.round(porcentaje * 100) / 100;
 }
 
 /** Escalones de % avance para filtros indexados (15 → 99) */
 export const AVANCE_FILTER_STEPS = [15, 30, 45, 60, 75, 90, 99] as const;
 
 /**
- * Normaliza el valor de % avance total desde campos de SharePoint.
+ * Obtiene el % de avance total.
+ * Si SharePoint no midió (por NA u otro error) o hay fases NA, usa cálculo local.
  */
 export function parsePorcentajeAvance(
   fields: Record<string, unknown>
 ): number {
-  const raw = getFieldValue(fields, "PorcentajeAvanceTotal");
-  if (typeof raw === "string") {
-    const cleaned = raw.replaceAll("%", "").replaceAll(/[^0-9.]/g, "");
-    return Number.parseFloat(cleaned) || 0;
+  const fromSharePoint = tryParseAvanceNumber(
+    getFieldValue(fields, "PorcentajeAvanceTotal")
+  );
+
+  // Con NA, la columna calculada de SharePoint suele fallar → siempre recalcular
+  if (hasAnyFaseNA(fields) || fromSharePoint == null) {
+    return calcularPorcentajeAvance(fields);
   }
-  return Number(raw) || 0;
+
+  return fromSharePoint;
 }
 
 /**
