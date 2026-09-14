@@ -26,7 +26,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   getFieldValue,
-  calcularPorcentajeAvance,
+  parsePorcentajeAvance,
 } from "../utils/sharePointFieldMapping";
 
 interface SharePointTableRealProps {
@@ -50,20 +50,9 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
     Record<string, boolean>
   >({});
 
-  // Función helper para obtener porcentaje de avance
-  const getPorcentajeAvance = (fields: Record<string, any>) => {
-    let porcentaje = getFieldValue(fields, "PorcentajeAvanceTotal");
-
-    // Si es un string (ej: "97%"), extraer el número
-    if (typeof porcentaje === "string") {
-      porcentaje =
-        parseFloat(porcentaje.replace("%", "").replace(/[^0-9.]/g, "")) || 0;
-    } else {
-      porcentaje = Number(porcentaje) || 0;
-    }
-
-    return porcentaje;
-  };
+  // Función helper para obtener porcentaje de avance (con fallback si hay NA)
+  const getPorcentajeAvance = (fields: Record<string, unknown>): number =>
+    parsePorcentajeAvance(fields);
 
   // Extraer series únicas para el filtro
   const seriesUnicas = useMemo(() => {
@@ -296,23 +285,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                     <td className="px-6 py-4 text-sm">
                       <div className="flex items-center gap-2">
                         {(() => {
-                          // Usar el valor calculado de SharePoint directamente
-                          let porcentaje = getFieldValue(
-                            item.fields,
-                            "PorcentajeAvanceTotal"
-                          );
-
-                          // Si es un string (ej: "97%"), extraer el número
-                          if (typeof porcentaje === "string") {
-                            porcentaje =
-                              parseFloat(
-                                porcentaje
-                                  .replace("%", "")
-                                  .replace(/[^0-9.]/g, "")
-                              ) || 0;
-                          } else {
-                            porcentaje = Number(porcentaje) || 0;
-                          }
+                          const porcentaje = getPorcentajeAvance(item.fields);
 
                           return (
                             <>
