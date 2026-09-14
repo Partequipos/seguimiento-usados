@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { X, Save, Loader2, Upload, FileIcon, Trash2 } from "lucide-react";
 import { SharePointListItem } from "../services/sharePointService";
+import { FASE_OPTIONS } from "../utils/sharePointFieldMapping";
 
 interface VehicleFormProps {
   vehicle?: SharePointListItem;
@@ -145,7 +146,7 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
   const watchedModelo = useWatch({ control, name: "Modelo" });
   const watchedAsesor = useWatch({ control, name: "Asesor" });
 
-  const faseOptions = ["0%", "25%", "50%", "75%", "100%"];
+  const faseOptions = [...FASE_OPTIONS];
 
   // Nombres descriptivos de las fases
   const faseNombres: Record<number, string> = {
@@ -660,8 +661,8 @@ const VehicleFormReal: React.FC<VehicleFormProps> = ({
                 <div className="mb-6 p-4 bg-brand-red-soft rounded-lg border-l-4 border-blue-500">
                   <p className="text-sm text-blue-800">
                     <strong>📋 Instrucciones:</strong> Selecciona el porcentaje de cada
-                    fase del alistamiento (0%, 25%, 50%, 75%, 100%). El % de avance total se calculará
-                    automáticamente en SharePoint.
+                    fase del alistamiento (0%, 25%, 50%, 75%, 100% o NA). El % de avance total se calculará
+                    automáticamente en SharePoint. NA = no aplica (no suma al avance).
                   </p>
                 </div>
 

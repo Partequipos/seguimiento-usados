@@ -136,6 +136,19 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
   };
 
   // Nombres de las fases
+  const getFaseBgColor = (porcentaje: unknown): string => {
+    const value =
+      typeof porcentaje === "string"
+        ? porcentaje
+        : String(porcentaje ?? "0%");
+    if (value === "100%") return "bg-green-500";
+    if (value === "75%") return "bg-lime-500";
+    if (value === "50%") return "bg-yellow-500";
+    if (value === "25%") return "bg-orange-500";
+    if (value.toUpperCase() === "NA") return "bg-gray-400";
+    return "bg-red-500";
+  };
+
   const faseNombres: Record<number, string> = {
     1: "LAVADO INICIAL",
     2: "INSPECCION",
@@ -545,16 +558,7 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                                   const porcentaje =
                                     getFieldValue(item.fields, `F${num}`) ||
                                     "0%";
-                                  const bgColor =
-                                    porcentaje === "100%"
-                                      ? "bg-green-500"
-                                      : porcentaje === "75%"
-                                      ? "bg-lime-500"
-                                      : porcentaje === "50%"
-                                      ? "bg-yellow-500"
-                                      : porcentaje === "25%"
-                                      ? "bg-orange-500"
-                                      : "bg-red-500";
+                                  const bgColor = getFaseBgColor(porcentaje);
                                   return (
                                     <div
                                       key={`F${num}`}
@@ -613,6 +617,12 @@ const SharePointTableReal: React.FC<SharePointTableRealProps> = ({
                                 <div className="w-4 h-4 bg-red-500 rounded shadow-sm"></div>
                                 <span className="font-medium">
                                   0% - No Iniciada
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <div className="w-4 h-4 bg-gray-400 rounded shadow-sm"></div>
+                                <span className="font-medium">
+                                  NA - No aplica
                                 </span>
                               </div>
                             </div>
