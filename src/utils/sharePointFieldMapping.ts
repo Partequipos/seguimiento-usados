@@ -167,7 +167,7 @@ export function getFieldValue(
 /**
  * Calcula el porcentaje de avance total basado en las fases F1-F16
  * Usa la fórmula de SharePoint: =(F1*0.0227272727272727)+...+(F16*0.0227272727272727)
- * Las fases deben estar en formato "0%", "50%", "100%"
+ * Las fases deben estar en formato "0%", "25%", "50%", "75%", "100%" o "NA"
  */
 export function calcularPorcentajeAvance(fields: Record<string, unknown>): number {
   const pesos = [
@@ -193,26 +193,33 @@ export function calcularPorcentajeAvance(fields: Record<string, unknown>): numbe
 
   for (let i = 1; i <= 16; i++) {
     const faseValue = getFieldValue(fields, `F${i}`);
-    
-    // Convertir porcentaje a número (0%, 50%, 100% -> 0, 0.5, 1)
-    let valorNumerico = 0;
-    if (faseValue !== undefined && faseValue !== null) {
-      const rawStr =
-        typeof faseValue === "string"
-          ? faseValue
-          : typeof faseValue === "number"
-            ? String(faseValue)
-            : "";
-      const porcentajeNum =
-        Number.parseFloat(rawStr.replaceAll("%", "")) || 0;
-      valorNumerico = porcentajeNum / 100; // Convierte a decimal (0, 0.5, 1)
-    }
-    
+    const valorNumerico = parseFaseToDecimal(faseValue);
     total += valorNumerico * pesos[i - 1];
   }
 
   // Retornar como porcentaje (0-100)
   return Math.round(total * 100 * 100) / 100; // Redondeado a 2 decimales
+}
+
+/** Valores válidos de cada fase F1–F16 (incluye NA = no aplica) */
+export const FASE_OPTIONS = ["0%", "25%", "50%", "75%", "100%", "NA"] as const;
+export type FaseOption = (typeof FASE_OPTIONS)[number];
+
+/**
+ * Convierte el valor de una fase a decimal 0–1.
+ * "NA" y valores no numéricos aportan 0 al avance.
+ */
+export function parseFaseToDecimal(faseValue: unknown): number {
+  if (faseValue == null) return 0;
+  const rawStr =
+    typeof faseValue === "string"
+      ? faseValue.trim()
+      : typeof faseValue === "number"
+        ? String(faseValue)
+        : "";
+  if (!rawStr || rawStr.toUpperCase() === "NA") return 0;
+  const porcentajeNum = Number.parseFloat(rawStr.replaceAll("%", "")) || 0;
+  return porcentajeNum / 100;
 }
 
 /** Escalones de % avance para filtros indexados (15 → 99) */

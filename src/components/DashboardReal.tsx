@@ -818,6 +818,8 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                   if (porcentaje === "75%") return "bg-lime-500 text-white";
                   if (porcentaje === "50%") return "bg-yellow-500 text-white";
                   if (porcentaje === "25%") return "bg-orange-500 text-white";
+                  if (porcentaje.toUpperCase() === "NA")
+                    return "bg-gray-400 text-white";
                   return "bg-red-500 text-white";
                 };
 
@@ -927,6 +929,12 @@ const DashboardReal: React.FC<DashboardRealProps> = ({ items }) => {
                 0%
               </span>
               <span className="text-gray-700 font-medium">No Iniciada</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex px-3 py-1 text-xs font-bold rounded-lg bg-gray-400 text-white shadow-sm">
+                NA
+              </span>
+              <span className="text-gray-700 font-medium">No aplica</span>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { Filter, X } from "lucide-react";
 import { SharePointListItem } from "../services/sharePointService";
 import {
   AVANCE_FILTER_STEPS,
+  FASE_OPTIONS,
   getAvanceStepFilterKey,
   getFieldValue,
   matchesPorcentajeAvanceFilter,
@@ -28,6 +29,8 @@ export interface FilterState {
   cliente: string;
   serie: string;
   fase: string;
+  /** Estado de la fase: "" | "0%" | "25%" | … | "100%" | "NA" */
+  faseEstado: string;
   observaciones: string;
   ciclo: string[];
   fechaCompromisoDesde: string;
@@ -155,6 +158,34 @@ function matchesPorcentajeAvance(
   return matchesPorcentajeAvanceFilter(avance, filters.porcentajeAvance);
 }
 
+function normalizeFaseEstado(raw: unknown): string {
+  if (raw == null) return "";
+  if (typeof raw === "string") return raw.trim();
+  if (typeof raw === "number") return `${raw}%`;
+  return "";
+}
+
+/** Filtra por estado de fase (0%…100% / NA), opcionalmente en una fase F1–F16. */
+function matchesFaseEstado(
+  item: SharePointListItem,
+  filters: FilterState,
+  excludeField: keyof FilterState
+): boolean {
+  if (excludeField === "faseEstado" || !filters.faseEstado) return true;
+
+  const target = filters.faseEstado;
+  if (filters.fase && excludeField !== "fase") {
+    return normalizeFaseEstado(getFieldValue(item.fields, filters.fase)) === target;
+  }
+
+  for (let i = 1; i <= 16; i++) {
+    if (normalizeFaseEstado(getFieldValue(item.fields, `F${i}`)) === target) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function formatAvanceStepLabel(step: number): string {
   const stepIndex = AVANCE_FILTER_STEPS.indexOf(
     step as (typeof AVANCE_FILTER_STEPS)[number]
@@ -182,7 +213,8 @@ function itemMatchesAllFilters(
     matchesCiclo(item, filters, excludeField) &&
     matchesFechaCompromiso(item, filters, excludeField) &&
     matchesFechaFinalAlistamiento(item, filters, excludeField) &&
-    matchesPorcentajeAvance(item, filters, excludeField)
+    matchesPorcentajeAvance(item, filters, excludeField) &&
+    matchesFaseEstado(item, filters, excludeField)
   );
 }
 
@@ -344,6 +376,7 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       cliente: "",
       serie: "",
       fase: "",
+      faseEstado: "",
       observaciones: "",
       ciclo: [],
       fechaCompromisoDesde: "",
@@ -500,6 +533,29 @@ const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             {Array.from({ length: 16 }, (_, i) => i + 1).map((num) => (
               <option key={`F${num}`} value={`F${num}`}>
                 Fase {num} (F{num})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Estado de fase (incluye NA) */}
+        <div>
+          <label
+            htmlFor="filter-faseEstado"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Estado de fase
+          </label>
+          <select
+            id="filter-faseEstado"
+            value={filters.faseEstado}
+            onChange={(e) => handleChange("faseEstado", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-red/40 focus:border-transparent"
+          >
+            <option value="">Todos</option>
+            {FASE_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option === "NA" ? "NA (No aplica)" : option}
               </option>
             ))}
           </select>

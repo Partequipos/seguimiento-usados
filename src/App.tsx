@@ -70,6 +70,7 @@ function AppContent() {
     cliente: "",
     serie: "",
     fase: "",
+    faseEstado: "",
     observaciones: "",
     ciclo: [],
     fechaCompromisoDesde: "",
@@ -150,6 +151,30 @@ function AppContent() {
         getFieldValue(item.fields, "Serie") !== filters.serie
       )
         return false;
+
+      // Filtro por estado de fase (0%…100% / NA), opcionalmente en F1–F16
+      if (filters.faseEstado) {
+        const target = filters.faseEstado;
+        const normalize = (raw: unknown): string => {
+          if (raw == null) return "";
+          if (typeof raw === "string") return raw.trim();
+          if (typeof raw === "number") return `${raw}%`;
+          return "";
+        };
+        if (filters.fase) {
+          if (normalize(getFieldValue(item.fields, filters.fase)) !== target)
+            return false;
+        } else {
+          let anyMatch = false;
+          for (let i = 1; i <= 16; i++) {
+            if (normalize(getFieldValue(item.fields, `F${i}`)) === target) {
+              anyMatch = true;
+              break;
+            }
+          }
+          if (!anyMatch) return false;
+        }
+      }
 
       // Filtro por Observaciones
       if (
